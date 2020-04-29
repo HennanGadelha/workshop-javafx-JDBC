@@ -15,12 +15,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.entities.Department;
-import model.services.DepartamentService;
+import model.services.DepartmentService;
 
 public class DepartmentListController implements Initializable {
 
 	
-	private DepartamentService service;
+	private DepartmentService service;
 	
 	
 	@FXML
@@ -28,7 +28,7 @@ public class DepartmentListController implements Initializable {
 
 	@FXML
 	private TableColumn<Department, Integer> tableColumnId;
-
+ 
 	@FXML
 	private TableColumn<Department, String> tableColumnName;
 
@@ -45,7 +45,7 @@ public class DepartmentListController implements Initializable {
 
 	
 	
-	public void setDepartmentService(DepartamentService service) {
+	public void setDepartmentService(DepartmentService service) {
 		
 		this.service = service;
 		
