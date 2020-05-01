@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.Listeners.DataChangeListeners;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -23,6 +26,8 @@ public class DepartmentFormController implements Initializable {
 
 	private DepartmentService service;
 
+	private List<DataChangeListeners> dataChangeListeners = new ArrayList<>();
+
 	@FXML
 	private TextField txtId;
 
@@ -37,57 +42,67 @@ public class DepartmentFormController implements Initializable {
 
 	@FXML
 	private Button btnCancel;
-	
-	
-	public void  setDepartmentService(DepartmentService service) {
-		
+
+	public void setDepartmentService(DepartmentService service) {
+
 		this.service = service;
 	}
-	
-	
 
 	public void setDepartment(Department department) {
 
 		this.department = department;
 	}
 
+	public void subscribeDataChangeListener(DataChangeListeners listener) {
+
+		dataChangeListeners.add(listener);
+	}
+
 	@FXML
 	public void onBtnSaveAction(ActionEvent event) {
-		
-		if(this.department == null) {
-			
+
+		if (this.department == null) {
+
 			throw new IllegalStateException("Departmento nulo");
 		}
-		
-		if(this.service == null) {
-			
+
+		if (this.service == null) {
+
 			throw new IllegalStateException("service nulo");
 		}
-		
-		
+
 		try {
 			department = getFormData();
 			service.saveOrUpdate(department);
+			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
 		} catch (DbException e) {
-			
+
 			Alerts.showAlert("Error ao cadastrar departamento", null, e.getMessage(), AlertType.ERROR);
-			
+
 		}
-		
+
+	}
+
+	private void notifyDataChangeListeners() {
+
+		for (DataChangeListeners listener : dataChangeListeners) {
+
+			listener.onDataChanged();
+
+		}
+
 	}
 
 	private Department getFormData() {
-		
+
 		Department dep = new Department();
-		
+
 		dep.setId(Utils.tryParseToInt(txtId.getText()));
 		dep.setName(txtName.getText());
 
 		return dep;
 	}
-
-
 
 	@FXML
 	public void onBtnCancelAction(ActionEvent event) {
