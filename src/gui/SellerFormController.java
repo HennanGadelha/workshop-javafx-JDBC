@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -105,7 +107,7 @@ public class SellerFormController implements Initializable {
 
 		if (this.seller == null) {
 
-			throw new IllegalStateException("Sellero nulo");
+			throw new IllegalStateException("Seller nulo");
 		}
 
 		if (this.service == null) {
@@ -117,6 +119,7 @@ public class SellerFormController implements Initializable {
 
 			seller = getFormData();
 			service.saveOrUpdate(seller);
+		
 			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
 
@@ -144,9 +147,11 @@ public class SellerFormController implements Initializable {
 
 	private Seller getFormData() {
 
-		Seller dep = new Seller();
+		Seller sel = new Seller();
 
 		ValidationException excepetion = new ValidationException("Valididation error");
+
+		sel.setId(Utils.tryParseToInt(txtId.getText()));
 
 		if (txtName.getText() == null || txtName.getText().trim().equals("")) {
 
@@ -154,15 +159,50 @@ public class SellerFormController implements Initializable {
 
 		}
 
-		dep.setId(Utils.tryParseToInt(txtId.getText()));
-		dep.setName(txtName.getText());
+		sel.setName(txtName.getText());
+
+		// validando email
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {
+
+			excepetion.addError("email", "Fiel can't be empty");
+
+		}
+
+		sel.setEmail(txtEmail.getText());
+		// fim validacao email
+
+		
+		if(dpBirthDate.getValue() == null) {
+			
+			excepetion.addError("birthDate", "Fiel can't be empty");
+			
+		}else {
+			
+			Instant instant = Instant.from(dpBirthDate.getValue().atStartOfDay(ZoneId.systemDefault()));
+			sel.setBirthDate(Date.from(instant));
+			
+		}
+		
+
+
+		// validando base salary
+
+		if (txtBaseSalary.getText() == null || txtBaseSalary.getText().trim().equals("")) {
+
+			excepetion.addError("baseSalary", "Fiel can't be empty");
+
+		}
+
+		sel.setBaseSalary(Utils.tryParseToDouble(txtBaseSalary.getText()));
+		
+		sel.setDepartment(comboBoxDepartment.getValue());
 
 		if (excepetion.getErrors().size() > 0) {
 
 			throw excepetion;
 		}
 
-		return dep;
+		return sel;
 	}
 
 	@FXML
@@ -200,17 +240,16 @@ public class SellerFormController implements Initializable {
 			dpBirthDate.setValue(LocalDate.ofInstant(seller.getBirthDate().toInstant(), ZoneId.systemDefault()));
 
 		}
-		
-		if(seller.getDepartment() == null) {
-			
+
+		if (seller.getDepartment() == null) {
+
 			comboBoxDepartment.getSelectionModel();
-			
-		}else {
-			
+
+		} else {
+
 			comboBoxDepartment.setValue(seller.getDepartment());
 
 		}
-		
 
 	}
 
@@ -231,14 +270,17 @@ public class SellerFormController implements Initializable {
 
 		Set<String> fields = errors.keySet();
 
-		if (fields.contains("name")) {
 
-			labelErroName.setText(errors.get("name"));
-
-		}
+		labelErroName.setText(fields.contains("name") ? errors.get("name") : "");
+		
+		labelErroEmail.setText(fields.contains("email") ? errors.get("email") : "");
+		
+		labelErroBirthDate.setText(fields.contains("birthDate") ? errors.get("birthDate") : "");
+		
+		labelErroBaseSalary.setText(fields.contains("baseSalary") ? errors.get("baseSalary") : "");
 
 	}
-	
+
 	private void initializeComboBoxDepartment() {
 		Callback<ListView<Department>, ListCell<Department>> factory = lv -> new ListCell<Department>() {
 			@Override
@@ -250,7 +292,6 @@ public class SellerFormController implements Initializable {
 		comboBoxDepartment.setCellFactory(factory);
 		comboBoxDepartment.setButtonCell(factory.call(null));
 	}
-	
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {

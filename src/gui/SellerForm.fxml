@@ -31,6 +31,10 @@
          <children>
             <Label text="Id" />
             <Label text="Name" GridPane.rowIndex="1" />
+            <Label text="Email" GridPane.rowIndex="2" />
+            <Label text="BirthDate" GridPane.rowIndex="3" />
+            <Label text="BaseSalary" GridPane.rowIndex="4" />
+            <Label text="Department" GridPane.rowIndex="5" />
             <TextField fx:id="txtId" editable="false" GridPane.columnIndex="1" />
             <TextField fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="labelErroName" textFill="#d00909" GridPane.columnIndex="2" GridPane.rowIndex="1" />
@@ -40,10 +44,6 @@
                   <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#onBtnCancelAction" text="Cancel" />
                </children>
             </HBox>
-            <Label text="Email" GridPane.rowIndex="2" />
-            <Label text="BirthDate" GridPane.rowIndex="3" />
-            <Label text="BaseSalary" GridPane.rowIndex="4" />
-            <Label text="Department" GridPane.rowIndex="5" />
             <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="txtBaseSalary" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <DatePicker fx:id="dpBirthDate" GridPane.columnIndex="1" GridPane.rowIndex="3" />

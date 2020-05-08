@@ -31,6 +31,20 @@ public class Utils {
 			return null;
 		}
 	}
+	
+	
+	public static Double tryParseToDouble(String str) {
+
+		try {
+			return Double.parseDouble(str);
+		} catch (NumberFormatException e) {
+
+			return null;
+		}
+	}
+	
+	
+	
 
 	public static <T> void formatTableColumnDate(TableColumn<T, Date> tableColumn, String format) {
 		tableColumn.setCellFactory(column -> {
@@ -50,8 +64,7 @@ public class Utils {
 			return cell;
 		});
 	}
-	
-	
+
 	public static <T> void formatTableColumnDouble(TableColumn<T, Double> tableColumn, int decimalPlaces) {
 		tableColumn.setCellFactory(column -> {
 			TableCell<T, Double> cell = new TableCell<T, Double>() {
@@ -69,7 +82,7 @@ public class Utils {
 			return cell;
 		});
 	}
-	
+
 	public static void formatDatePicker(DatePicker datePicker, String format) {
 		datePicker.setConverter(new StringConverter<LocalDate>() {
 			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(format);
@@ -96,7 +109,5 @@ public class Utils {
 			}
 		});
 	}
-	
-	
 
 }
